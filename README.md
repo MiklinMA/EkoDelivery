@@ -8,6 +8,34 @@ The delivery cost is equal to the summation of these routes that they choosed. E
 
 The purpose of this assignments is to help Eko building the system that provide their customers with information about delivery route. you will compute the delivery cost of a certain route, the number of possible delivery route between two towns, and the cost of cheapest delivery route between two towns.
 
+## Simple graph library
+
+Simple graph is a pyhon module
+```
+graph_cheapest(graph, route)
+    Find cheapest path by given source-destination route.
+
+graph_cost(graph, route)
+    Calculate cost of given route in graph
+
+graph_create(data)
+    Return new graph (dict)
+
+graph_routes(graph, route, limit=None, twice=False, cost_limit=None)
+    Return all posible routes for graph by given source and destination route
+
+    Keyword arguments:
+    limit -- hop limit (int)
+    twice -- using same route twice (bool)
+    cost_limit -- route cost limit (int)
+
+    Be careful! Using same route twice may cause of system hangs!
+    In this case use another kind of limit or be sure what you do.
+
+graph_update(graph, data)
+    Update given graph with data
+```
+
 ## Console application
 
 Console application uses the simple graph library and could be used to calculate routes
