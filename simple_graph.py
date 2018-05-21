@@ -1,5 +1,20 @@
 import re
 
+def graph_save(graph):
+    with open('graph.txt', 'w') as f:
+        if graph:
+            for k, m in graph.items():
+                for n, v in m.items():
+                    f.write(''.join((k,n,str(v))) + ',')
+        else:
+            f.write('')
+
+def graph_load():
+    with open('graph.txt', 'r') as f:
+        graph = graph_create(f.read())
+    return graph
+
+
 def graph_update(graph, data):
     '''Update given graph with data'''
     data = data.split(',')

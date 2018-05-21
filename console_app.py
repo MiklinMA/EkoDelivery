@@ -2,21 +2,8 @@
 
 import argparse
 
+from simple_graph import graph_load, graph_save
 from simple_graph import graph_create, graph_update, graph_cost, graph_routes, graph_cheapest
-
-def save_graph(graph):
-    with open('graph.txt', 'w') as f:
-        if graph:
-            for k, m in graph.items():
-                for n, v in m.items():
-                    f.write(''.join((k,n,str(v))) + ',')
-        else:
-            f.write('')
-
-def load_graph():
-    with open('graph.txt', 'r') as f:
-        graph = graph_create(f.read())
-    return graph
 
 parser = argparse.ArgumentParser(description='Simple graph calculator.')
 
@@ -51,7 +38,7 @@ def main(args):
         print('Graph deleted')
         return
 
-    graph = load_graph()
+    graph = graph_load()
 
     if args.update:
         graph_update(graph, args.update)
@@ -68,7 +55,7 @@ def main(args):
     else:
         parser.print_help()
 
-    save_graph(graph)
+    graph_save(graph)
 
 if __name__ == '__main__':
     args = parser.parse_args()
