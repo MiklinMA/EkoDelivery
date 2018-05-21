@@ -36,11 +36,50 @@ def graph_cost(graph, route):
 
     return total
 
+def graph_routes(graph, route, limit=None, twice=False):
+    routes = []
+
+    def walk(routes, path, depth=0):
+        if limit is not None and depth>= limit:
+            return
+
+        if len(path) < 2:
+            return
+
+        src = path[-2]
+        dst = path[-1]
+
+        for k in graph[src].keys():
+            if k == dst: 
+                routes.append(path)
+                continue
+            if not twice and str(src + k) in path:
+                continue
+
+            result = walk(routes, path[:-1] + k + dst, depth+1)
+
+    walk(routes, route)
+    return routes
+
 # Simple tests
 graph = graph_create('AB1,AC4,AD10,BE3,CD4,CF2,DE1,EB3,EA2,FD1')
 print(json.dumps(graph, indent=2))
 
+print()
 routes = ['ABE', 'AD', 'EACF', 'ADF']
 for route in routes:
     print(route, graph_cost(graph, route))
+
+print()
+routes = [
+    ('ED', 4),
+    ('EE', ),
+    ('EE', 20, True),
+]
+for route in routes:
+    res = graph_routes(graph, *route)
+    print()
+    print(route)
+    for path in res:
+        print('route', path, graph_cost(graph, path))
 
