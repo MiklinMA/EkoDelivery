@@ -1,5 +1,4 @@
 import re
-import json
 
 def graph_update(graph, data):
     data = data.split(',')
@@ -10,7 +9,7 @@ def graph_update(graph, data):
         src = m.group(1)
         dst = m.group(2)
         cost = m.group(3)
-        graph.setdefault(src, {})[dst] = cost
+        graph.setdefault(src, {})[dst] = int(cost)
 
 def graph_create(data):
     graph = {}
@@ -30,7 +29,7 @@ def graph_cost(graph, route):
         b = route[i+1]
 
         if graph.get(a) and graph[a].get(b):
-            total += int(graph[a][b])
+            total += graph[a][b]
         else:
             return None
 
@@ -70,10 +69,21 @@ def graph_routes(graph, route, limit=None, twice=False, cost_limit=None):
     walk(routes, route)
     return routes
 
+def graph_cheapest(graph, route):
+    routes = graph_routes(graph, route)
+    cheapest = None
+    for path in routes:
+        cost = graph_cost(graph, path)
+        if cheapest is None or cost < cheapest:
+            cheapest = cost
+
+    return cheapest
+
 # Simple tests
 graph = graph_create('AB1,AC4,AD10,BE3,CD4,CF2,DE1,EB3,EA2,FD1')
 assert type(graph) == dict
 assert len(graph)
+import json
 print(json.dumps(graph, indent=2))
 
 print()
@@ -93,12 +103,23 @@ routes = [
     (('ED', 4), 4),
     (('EE', ), 5),
     (('EE', None, True, 20), 29),
+    (('EE', None, True, 40), 1147),
+    (('EE', None, True, 50), 7925),
 ]
 for route in routes:
     res = graph_routes(graph, *route[0])
-    print()
     print(route[0], len(res))
     assert len(res) == route[1]
-    for path in res:
-        print(path, graph_cost(graph, path))
+
+print()
+routes = [
+    ('ED', 9),
+    ('EE', 6),
+    ('AA', 6),
+    ('CA', 6),
+]
+for route in routes:
+    res = graph_cheapest(graph, route[0])
+    print(route[0], res)
+    assert res == route[1]
 
