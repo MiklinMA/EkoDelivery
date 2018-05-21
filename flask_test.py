@@ -20,8 +20,9 @@ def test_delete():
 def test_create(data):
     payload = { 'data': data }
 
-    req = r.Request(host + '/create', data=json.dumps(payload).encode('utf-8'),
-        headers={'content-type': 'application/json'})
+    req = r.Request(host + '/', data=json.dumps(payload).encode('utf-8'),
+        headers={'content-type': 'application/json'},
+        method='PUT')
     res = r.urlopen(req)
     res = json.loads(res.read().decode())
     print(res)
@@ -30,7 +31,7 @@ def test_create(data):
 def test_update(data):
     payload = { 'data': data }
 
-    req = r.Request(host + '/update', data=json.dumps(payload).encode('utf-8'),
+    req = r.Request(host + '/', data=json.dumps(payload).encode('utf-8'),
         headers={'content-type': 'application/json'})
     res = r.urlopen(req)
     res = json.loads(res.read().decode())

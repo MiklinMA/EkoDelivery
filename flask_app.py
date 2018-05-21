@@ -9,20 +9,21 @@ app = Flask(__name__)
 
 graph = graph_load()
 
-@app.route('/', methods=['GET', 'DELETE'])
+@app.route('/', methods=['GET'])
 def index():
     global graph
-    if request.method == 'GET':
-        return jsonify(graph)
-    else:
-        graph = {}
-        graph_save(graph)
-        return jsonify({
-            'result': 'success',
-            'message': 'Graph deleted'
-        })
+    return jsonify(graph)
 
-@app.route('/create', methods=['POST'])
+@app.route('/', methods=['DELETE'])
+def delete():
+    graph = {}
+    graph_save(graph)
+    return jsonify({
+        'result': 'success',
+        'message': 'Graph deleted'
+    })
+
+@app.route('/', methods=['PUT'])
 def create():
     if not request.json or not 'data' in request.json:
         abort(400)
@@ -43,7 +44,7 @@ def create():
         'message': 'Graph created'
     })
 
-@app.route('/update', methods=['POST'])
+@app.route('/', methods=['POST'])
 def update():
     if not request.json or not 'data' in request.json:
         abort(400)
