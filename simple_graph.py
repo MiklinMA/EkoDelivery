@@ -36,11 +36,11 @@ def graph_cost(graph, route):
 
     return total
 
-def graph_routes(graph, route, limit=None, twice=False):
+def graph_routes(graph, route, limit=None, twice=False, cost_limit=None):
     routes = []
 
     def walk(routes, path, depth=0):
-        if limit is not None and depth>= limit:
+        if limit is not None and depth >= limit:
             return
 
         if len(path) < 2:
@@ -51,35 +51,54 @@ def graph_routes(graph, route, limit=None, twice=False):
 
         for k in graph[src].keys():
             if k == dst: 
-                routes.append(path)
-                continue
+
+                if cost_limit is None:
+                    routes.append(path)
+                    continue
+                else:
+                    cost = graph_cost(graph, path)
+                    if cost_limit > cost:
+                        routes.append(path)
+                    else:
+                        continue
+
             if not twice and str(src + k) in path:
                 continue
 
-            result = walk(routes, path[:-1] + k + dst, depth+1)
+            walk(routes, path[:-1] + k + dst, depth+1)
 
     walk(routes, route)
     return routes
 
 # Simple tests
 graph = graph_create('AB1,AC4,AD10,BE3,CD4,CF2,DE1,EB3,EA2,FD1')
+assert type(graph) == dict
+assert len(graph)
 print(json.dumps(graph, indent=2))
 
 print()
-routes = ['ABE', 'AD', 'EACF', 'ADF']
+routes = [
+    ('ABE', 4),
+    ('AD', 10),
+    ('EACF', 8),
+    ('ADF', None),
+]
 for route in routes:
-    print(route, graph_cost(graph, route))
+    result = graph_cost(graph, route[0])
+    print(route[0], result)
+    assert result == route[1]
 
 print()
 routes = [
-    ('ED', 4),
-    ('EE', ),
-    ('EE', 20, True),
+    (('ED', 4), 4),
+    (('EE', ), 5),
+    (('EE', None, True, 20), 29),
 ]
 for route in routes:
-    res = graph_routes(graph, *route)
+    res = graph_routes(graph, *route[0])
     print()
-    print(route)
+    print(route[0], len(res))
+    assert len(res) == route[1]
     for path in res:
-        print('route', path, graph_cost(graph, path))
+        print(path, graph_cost(graph, path))
 
