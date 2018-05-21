@@ -65,4 +65,43 @@ optional arguments:
   --cheap route    Calculate the cheapest delivery route between two town.
 ```
 
+## Flask REST application
 
+Simple REST API for library. 
+
+Limit: Only one graph for all users!
+
+### Methods:
+```
+GET /
+    Returns graph as JSON dict
+    
+PUT /
+    Create graph
+    
+    Content-Type: application/json
+    JSON: {"data": "AB1,..."}
+
+POST /
+    Update graph
+    
+    Content-Type: application/json
+    JSON: {"data": "AB1,..."}
+
+DELETE /
+    Delete graph
+
+GET /cost/<route>
+    Return cost of given route if exist or 'No such route'
+
+GET /cheapest/<route>
+    Return cheapest cost of given route if exist or 'No such route'
+    
+GET /count/route
+    Return count of posible routes for graph by given source and destination route (and limits)
+
+    Arguments:
+    hop limit - maximum stops (int)
+    use_twice -- using same route twice (bool)
+    cost_limit -- route cost limit (int)
+```
